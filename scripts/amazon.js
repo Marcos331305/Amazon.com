@@ -1,3 +1,30 @@
+// Handling navbar toggler
+const navToggingContainer = document.querySelector(".amazon-header-toggler");
+const togglingMenubar = document.querySelector(".toggling-menubar");
+navToggingContainer.addEventListener("click",(e)=>{
+  const menuBar = e.target;
+  if(menuBar.name === "reorder-four-outline"){
+    const crossIcon = document.createElement("img");
+    crossIcon.src = "./images/Cross-Icon.png";
+    navToggingContainer.replaceChild(crossIcon,menuBar);
+    togglingMenubar.classList.add("active");
+    togglingMenubar.classList.remove("closing");
+    togglingMenubar.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+  else{
+    const toggler = `
+      <ion-icon name="reorder-four-outline" size="large"></ion-icon>
+    `;
+    navToggingContainer.removeChild(menuBar);
+    navToggingContainer.innerHTML = toggler;
+    // togglingMenubar.style.display = "none";
+    togglingMenubar.classList.add("closing");
+    togglingMenubar.classList.remove("active");
+    document.body.style.overflow = "";
+  }  
+});
+
 /*
 The main idea of JS for generating the HTML elements to show the products or anything else on the webpage is :-
 1.Save the data in JS (About your HTML elements(like products here) that you want to show on the webpage through JS)

@@ -52,10 +52,17 @@
     display: none;
   }
 
+  .amazon-header-right-section{
+    display: none !important;
+  }
+
   .amazon-mobile-logo {
     display: block;
     height: 35px;
     margin-top: 5px;
+  }
+  .amazon-header-toggler{
+    display: block !important;
   }
 }
 
@@ -146,4 +153,70 @@
   
   width: 26px;
   text-align: center;
+}
+
+.amazon-header-toggler{
+  display: none;
+}
+.amazon-header-toggler img{
+  height: 32px;
+}
+
+.toggling-menubar-wrapper{
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: start;
+  justify-content: start;
+  background-color: #FEBD68;
+  gap: 40px;
+  width: 79%;
+  padding-left: 22px;
+  padding-top: 50px;
+  border-radius: 4px;
+}
+.toggling-menubar-first{
+  padding-left: 8px;
+  background-color: #131921;
+}
+.toggling-menubar-second{
+  background-color: #131921;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToLeft {
+  0% {
+    transform: translateX(0); 
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.toggling-menubar-styles {
+  display: none;
+  justify-content: flex-start;
+  position: fixed;
+  background-color: #131921;
+  right: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  transform: translateX(-100%);
+}
+
+.toggling-menubar-styles.active {
+  display: flex;
+  animation: slideInFromLeft 0.5s forwards;
+}
+
+.toggling-menubar-styles.closing {
+  animation: slideOutToLeft 0.5s forwards;
 }
