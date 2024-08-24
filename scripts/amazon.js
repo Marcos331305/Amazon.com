@@ -1,18 +1,17 @@
 // Handling navbar toggler
 const navToggingContainer = document.querySelector(".amazon-header-toggler");
 const togglingMenubar = document.querySelector(".toggling-menubar");
-navToggingContainer.addEventListener("click",(e)=>{
+navToggingContainer.addEventListener("click", (e) => {
   const menuBar = e.target;
-  if(menuBar.name === "reorder-four-outline"){
+  if (menuBar.name === "reorder-four-outline") {
     const crossIcon = document.createElement("img");
     crossIcon.src = "./images/Cross-Icon.png";
-    navToggingContainer.replaceChild(crossIcon,menuBar);
+    navToggingContainer.replaceChild(crossIcon, menuBar);
     togglingMenubar.classList.add("active");
     togglingMenubar.classList.remove("closing");
     togglingMenubar.style.display = "flex";
     document.body.style.overflow = "hidden";
-  }
-  else{
+  } else {
     const toggler = `
       <ion-icon name="reorder-four-outline" size="large"></ion-icon>
     `;
@@ -22,14 +21,14 @@ navToggingContainer.addEventListener("click",(e)=>{
     togglingMenubar.classList.add("closing");
     togglingMenubar.classList.remove("active");
     document.body.style.overflow = "";
-  }  
+  }
 });
 
 /*
 The main idea of JS for generating the HTML elements to show the products or anything else on the webpage is :-
 1.Save the data in JS (About your HTML elements(like products here) that you want to show on the webpage through JS)
 2.Generage the HTML
-3.Put it on the Webpage (Make it interactive)
+3.Put it on the Webpage + Make it interactive
 */
 
 /*
@@ -126,7 +125,7 @@ products.forEach((product) => {
          Added
         </div>
 
-        <button class="add-to-cart-button button-primary">
+        <button class="add-to-cart-button button-primary add-to-cart" data-product-id="${product.id}" data-product-name="${product.name}">
          Add to Cart
         </button>
     </div>
@@ -139,3 +138,33 @@ products.forEach((product) => {
 ---> Fetch the appropraite Html element in which we want to show our all products using DOM and insert the entire HTML of Products that we have generated before
 */
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
+
+// Make it interactive by adding the functionality to addCart btn
+document.querySelectorAll(".add-to-cart").forEach((button) => {
+  button.addEventListener("click", () => {
+    const productId = button.dataset.productId;
+    const productName = button.dataset.productName;
+    let matchingItem;
+    cart.forEach((item)=>{
+      if(productId === item.id){
+        matchingItem = item;
+      }
+    });
+    if(matchingItem){
+      matchingItem.quantity += 1;
+    } else{
+      cart.push({
+        id: productId,
+        productName: productName,
+        quantity: 1
+      });
+    }
+    // Calculate the total cart quantity
+    let totalQuantity = 0;
+    cart.forEach((item)=>{
+      totalQuantity += item.quantity; 
+    });
+    // Upadate the totalQuantity in the cart-logo
+    document.querySelector(".cart-quantity").innerHTML = totalQuantity;
+  });
+});
