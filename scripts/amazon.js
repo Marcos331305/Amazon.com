@@ -165,6 +165,7 @@ document.querySelectorAll(".add-to-cart").forEach((button) => {
       totalQuantity += item.quantity; 
     });
     // Upadate the totalQuantity in the cart-logo
-    document.querySelector(".cart-quantity").innerHTML = totalQuantity;
+    document.querySelector(".js-cart-quantity-smallDevices").innerHTML = totalQuantity;
+    document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
   });
 });
