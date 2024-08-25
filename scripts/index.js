@@ -1,6 +1,6 @@
 // Importing neccessary Identifiers(variables,functions...) from other Js-Module files
-import { cart } from '../data/cart.js';
-import { products } from '../data/products.js';
+import { cart,addToCart } from "../data/cart.js";
+import { products } from "../data/products.js";
 
 // Handling navbar toggler
 const navToggingContainer = document.querySelector(".amazon-header-toggler");
@@ -143,34 +143,28 @@ products.forEach((product) => {
 */
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+// function for calculating & updating the cartQuantity on the page
+  function updateCartQuantity(){
+    // Calculate the total cart quantity
+    let totalQuantity = 0;
+    cart.forEach((item) => {
+      totalQuantity += item.quantity;
+    });
+    // Upadate the totalQuantity in the cart-logo
+    document.querySelector(".js-cart-quantity-smallDevices").innerHTML =
+      totalQuantity;
+    document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
+}
+
 // Make it interactive by adding the functionality to addCart btn
 document.querySelectorAll(".add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
     const productName = button.dataset.productName;
-    let matchingItem;
-    cart.forEach((item)=>{
-      if(productId === item.id){
-        matchingItem = item;
-      }
-    });
-    if(matchingItem){
-      matchingItem.quantity += 1;
-    } else{
-      cart.push({
-        id: productId,
-        productName: productName,
-        quantity: 1
-      });
-    }
-    // Calculate the total cart quantity
-    let totalQuantity = 0;
-    cart.forEach((item)=>{
-      totalQuantity += item.quantity; 
-    });
-    // Upadate the totalQuantity in the cart-logo
-    document.querySelector(".js-cart-quantity-smallDevices").innerHTML = totalQuantity;
-    document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
+    // Call the addToCart function for adding the products in the cart
+    addToCart(productId,productName);
+    // call the updateCartQuantity function for updating the cartQuantity on the page
+    updateCartQuantity();
   });
 });
 
