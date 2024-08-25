@@ -1,3 +1,5 @@
+import {cart} from '../data/cart.js';
+
 // Handling navbar toggler
 const navToggingContainer = document.querySelector(".amazon-header-toggler");
 const togglingMenubar = document.querySelector(".toggling-menubar");
@@ -169,3 +171,12 @@ document.querySelectorAll(".add-to-cart").forEach((button) => {
     document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
   });
 });
+
+
+/*
+JS ---> Modules
+How to create Modules in JS :-
+1. we need to create a seperate js file in which we write the code with the "export"-statement which we want to use outside the file(in other files). And the important thing is that don't load this file with script-tag because we use it as module to use it's code ouside it(or in another files). -> 'This file will be your module'.
+2. Then we go that file in which we want to use that exported code for that we write the "import"-statement with the names of variables,function or anything else we want to import . we also write the path of the file from which we are including the code of that appropriate identifier that we have mentioned in the "import"-statement.
+**NOTE => The most important thing is that you have to mention the attribute in the script tag of that file in which we have used the "import"-statements. if you are getting the error of "you can't use import statements outside a module". Because in JS bydefault files are not considered as 'modules'.
+*/
