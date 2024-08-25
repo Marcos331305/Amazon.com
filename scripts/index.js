@@ -1,4 +1,6 @@
-import {cart} from '../data/cart.js';
+// Importing neccessary Identifiers(variables,functions...) from other Js-Module files
+import { cart } from '../data/cart.js';
+import { products } from '../data/products.js';
 
 // Handling navbar toggler
 const navToggingContainer = document.querySelector(".amazon-header-toggler");
@@ -171,7 +173,6 @@ document.querySelectorAll(".add-to-cart").forEach((button) => {
     document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
   });
 });
-
 
 /*
 JS ---> Modules
