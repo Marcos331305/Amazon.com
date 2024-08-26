@@ -1,5 +1,5 @@
 // Importing neccessary Identifiers(variables,functions...) from other Js-Module files
-import { cart,addToCart } from "../data/cart.js";
+import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 
 // Handling navbar toggler
@@ -144,17 +144,17 @@ products.forEach((product) => {
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
 // function for calculating & updating the cartQuantity on the page
-  function updateCartQuantity(){
-    // Calculate the total cart quantity
-    let totalQuantity = 0;
-    cart.forEach((item) => {
-      console.log(item);
-      totalQuantity += item.quantity;
-    });
-    // Upadate the totalQuantity in the cart-logo
-    document.querySelector(".js-cart-quantity-smallDevices").innerHTML =
-      totalQuantity;
-    document.querySelector(".js-cart-quantity").innerHTML = totalQuantity;
+function updateCartQuantity() {
+  // Calculate the total cart quantity
+  const realCart = JSON.parse(localStorage.getItem("cart"));
+  let totalQuantity = 0;
+  realCart.forEach((item)=>{
+    totalQuantity += item.quantity;
+  });
+  localStorage.setItem('totalQuantity',JSON.stringify(totalQuantity));
+  // Upadate the totalQuantity in the cart-logo while presistanting it
+  document.querySelector(".js-cart-quantity-smallDevices").innerHTML = JSON.parse(localStorage.getItem('totalQuantity'));
+  document.querySelector(".js-cart-quantity").innerHTML = JSON.parse(localStorage.getItem('totalQuantity'));
 }
 
 // Make it interactive by adding the functionality to addCart btn
@@ -163,11 +163,14 @@ document.querySelectorAll(".add-to-cart").forEach((button) => {
     const productId = button.dataset.productId;
     const productName = button.dataset.productName;
     // Call the addToCart function for adding the products in the cart
-    addToCart(productId,productName);
-    // call the updateCartQuantity function for updating the cartQuantity on the page
+    addToCart(productId, productName);
+    // Update the cartQuantity on page when user adding items to the cart
     updateCartQuantity();
   });
 });
+
+// Update the cartQuantity on the page when user come to home-page form another page
+updateCartQuantity();
 
 /*
 JS ---> Modules
