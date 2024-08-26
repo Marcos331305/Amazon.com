@@ -148,6 +148,7 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML;
     // Calculate the total cart quantity
     let totalQuantity = 0;
     cart.forEach((item) => {
+      console.log(item);
       totalQuantity += item.quantity;
     });
     // Upadate the totalQuantity in the cart-logo

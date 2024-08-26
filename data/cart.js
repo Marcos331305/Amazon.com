@@ -1,5 +1,5 @@
 // creating the cartArray for a list of products
-export const cart = [
+export let cart = [
   {
     id: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
     productName:'Black and Gray Athletic Cotton Socks - 6 Pairs',
@@ -33,3 +33,9 @@ export function addToCart(productId,productName) {
     }
   }
   
+export function removeFromCart(itemId){
+    const updatedCart = cart.filter((product)=>{
+      return product.id !== itemId;
+    });
+    cart = updatedCart;
+  }
