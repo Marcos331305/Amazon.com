@@ -1,5 +1,20 @@
 // creating the cartArray for a list of products
-export let cart = JSON.parse(localStorage.getItem("cart"));
+// export let cart = JSON.parse(localStorage.getItem("cart"));
+
+export let cart = [
+  {
+    id: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
+    productName: 'Black and Gray Athletic Cotton Socks - 6 Pairs',
+    quantity: 1,
+    deliveryOptionId: '1'
+  },
+  {
+    id: '15b6fc6f-327a-4ec4-896f-486349e85a3d',
+    productName: 'Intermediate Size Basketball',
+    quantity: 2,
+    deliveryOptionId: '2'
+  }
+];
 
 /*
 function to add the product in the cart if it not in the cart. And if the product is already in the cart then it will only update the quantity.
