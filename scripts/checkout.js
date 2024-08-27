@@ -13,50 +13,37 @@ cart.forEach((cartItem) => {
     }
   });
   const html = `
-                <div id="${
+<div id="${cartItem.id}" class="cart-item-container js-item-container">
+    <div class="delivery-date js-delivery-date">
+        Delivery date: Tuesday, June 21
+    </div>
+
+    <div class="cart-item-details-grid">
+        <img class="product-image" src="${matchingItem.image}">
+
+        <div class="cart-item-details">
+            <div class="product-name">${cartItem.productName}</div>
+            <div class="product-price">₹${matchingItem.priceCents}</div>
+            <div class="product-quantity">
+                <span>
+                    Quantity: <span class="quantity-label">${
+                      cartItem.quantity
+                    }</span>
+                </span>
+                <span class="update-quantity-link link-primary">Update</span>
+                <span data-item-id="${
                   cartItem.id
-                }" class="cart-item-container js-item-container">
-                        <div class="delivery-date js-delivery-date">
-                        Delivery date: Tuesday, June 21
-                        </div>
-        
-                        <div class="cart-item-details-grid">
-                        <img class="product-image"
-                            src="${matchingItem.image}">
-        
-                        <div class="cart-item-details">
-                            <div class="product-name">
-                             ${cartItem.productName}
-                            </div>
-                            <div class="product-price">
-                             ₹${matchingItem.priceCents}
-                            </div>
-                            <div class="product-quantity">
-                            <span>
-                                Quantity: <span class="quantity-label">${
-                                  cartItem.quantity
-                                }</span>
-                            </span>
-                            <span class="update-quantity-link link-primary">
-                                Update
-                            </span>
-                            <span data-item-id="${
-                              cartItem.id
-                            }" class="delete-quantity-link link-primary js-delete-link">
-                                Delete
-                            </span>
-                            </div>
-                        </div>
-        
-                        <div class="delivery-options">
-                            <div class="delivery-options-title">
-                            Choose a delivery option:
-                            </div>
-                            ${deliveryOptionsHTML(cartItem)}
-                        </div>
-                     </div>
-                </div>
-            `;
+                }" class="delete-quantity-link link-primary js-delete-link">Delete</span>
+            </div>
+        </div>
+
+        <div class="delivery-options">
+            <div class="delivery-options-title">Choose a delivery option:</div>
+            ${deliveryOptionsHTML(cartItem)}
+        </div>
+    </div>
+</div>
+`;
   productsHTML += html;
 });
 
@@ -92,8 +79,46 @@ function deliveryOptionsHTML(cartItem) {
   return allDeliveryOptinsHTML;
 }
 
-// testing code for updation of final date
+// Event Delegation on Dynamically(through JS) added HTML Elements
+document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("click", (event) => {
+    if (event.target.matches(".js-delivery-option-input")) {
+      // Get the clicked delivery option
+      const selectedOption = event.target;
+      // Find the closest cart item container
+      const cartItemContainer = selectedOption.closest(".js-item-container");
+      if (cartItemContainer) {
+        // In that cart item container query the delivery-date container using query-selector
+        const deliveryDateContainer =
+          cartItemContainer.querySelector(".js-delivery-date");
+        if (deliveryDateContainer) {
+          const finalDate = selectedOption.dataset.deliveryDate;
+          deliveryDateContainer.textContent = `Delivery date: ${finalDate}`;
+        } else {
+          console.log("Targeted .js-delivery-date container not FOUND !");
+        }
+      } else {
+        console.log("closest .js-item-container not FOUND !");
+      }
+    }
+  });
+});
 
+/*
+Setting up the finalDeliveryDate when the page is loaded or reloaded
+---> As we know we are going to setup the first delivery option selected by default for each product of cart
+---> So according to this we are going to set the finalDeliveryDate when the page is loaded or reloaded to the date which is present in first delivery option(Free-DeliveryOption)
+*/
+document.addEventListener("DOMContentLoaded", () => {
+  const now = dayjs();
+  const newDate = now.add(7, "day");
+  const deliveryDate = newDate.format("dddd, MMMM D");
+  document
+    .querySelectorAll(".js-delivery-date")
+    .forEach((finalDeliveryDate) => {
+      finalDeliveryDate.textContent = `Delivery date: ${deliveryDate}`;
+    });
+});
 
 document.querySelector(".js-order-summary").innerHTML = productsHTML;
 
