@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from "../data/cart.js"; // Named Exports
+import { cart, removeFromCart, updateDeliveryOption } from "../data/cart.js"; // Named Exports
 import { deliveryOptions } from "../data/deliveryOptions.js";
 import { products } from "../data/products.js";
 // Importing ESM-version of day.JS Library using JS-Modules
@@ -60,7 +60,7 @@ function deliveryOptionsHTML(cartItem) {
     const isChecked =
       cartItem.deliveryOptionId === deliveryOption.id ? "checked" : "";
     const html = `
-            <div class="delivery-option">
+            <div class="delivery-option js-delivery-option" data-product-id="${cartItem.id}" data-delivery-option-id="${deliveryOption.id}" data-final-date="${dateString}">
                 <input type="radio" ${isChecked}
                 class="delivery-option-input js-delivery-option-input"
                 name="delivery-option-${cartItem.id}" value="${deliveryOption.id}" data-delivery-date="${dateString}">
@@ -81,7 +81,7 @@ function deliveryOptionsHTML(cartItem) {
 
 // Event Delegation on Dynamically(through JS) added HTML Elements
 document.addEventListener("DOMContentLoaded", () => {
-  document.addEventListener("click", (event) => {
+  document.addEventListener("change", (event) => {
     if (event.target.matches(".js-delivery-option-input")) {
       // Get the clicked delivery option
       const selectedOption = event.target;
@@ -151,3 +151,12 @@ Best Practice in Programming --->
 // const newDate = now.add(7,'day');
 // const deliveryDate = newDate.format('dddd, MMMM D');
 // console.log('deliverDate(after 7 days) : ',deliveryDate);
+
+document.querySelectorAll(".js-delivery-option").forEach((element) => {
+  element.addEventListener("click", (event) => {
+    // console.log('clicked');
+    const productId = element.dataset.productId;
+    const newDeliveryOptionId = element.dataset.deliveryOptionId;
+    updateDeliveryOption(productId, newDeliveryOptionId);
+  });
+});
