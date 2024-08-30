@@ -14,7 +14,7 @@ cart.forEach((cartItem) => {
   });
   const html = `
 <div id="${cartItem.id}" class="cart-item-container js-item-container">
-    <div class="delivery-date js-delivery-date">
+    <div class="delivery-date js-delivery-date js-finaldate-${cartItem.id}">
         Delivery date: Tuesday, June 21
     </div>
 
@@ -81,7 +81,7 @@ function deliveryOptionsHTML(cartItem) {
 
 // Event Delegation on Dynamically(through JS) added HTML Elements
 document.addEventListener("DOMContentLoaded", () => {
-  document.addEventListener("change", (event) => {
+  document.addEventListener("click", (event) => {
     if (event.target.matches(".js-delivery-option-input")) {
       // Get the clicked delivery option
       const selectedOption = event.target;
@@ -158,5 +158,50 @@ document.querySelectorAll(".js-delivery-option").forEach((element) => {
     const productId = element.dataset.productId;
     const newDeliveryOptionId = element.dataset.deliveryOptionId;
     updateDeliveryOption(productId, newDeliveryOptionId);
+    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("change", (event) => {
+        if (event.target.matches(".js-delivery-option-input")) {
+          // Get the clicked delivery option
+          const selectedOption = event.target;
+          // Find the closest cart item container
+          const cartItemContainer =
+            selectedOption.closest(".js-item-container");
+          if (cartItemContainer) {
+            // In that cart item container query the delivery-date container using query-selector
+            const deliveryDateContainer =
+              cartItemContainer.querySelector(".js-delivery-date");
+            if (deliveryDateContainer) {
+              const finalDate = selectedOption.dataset.deliveryDate;
+              deliveryDateContainer.textContent = `Delivery date: ${finalDate}`;
+            } else {
+              console.log("Targeted .js-delivery-date container not FOUND !");
+            }
+          } else {
+            console.log("closest .js-item-container not FOUND !");
+          }
+        }
+      });
+    });
+  });
+});
+
+// making finalDate Interactive
+document.addEventListener("DOMContentLoaded", () => {
+  const now = dayjs();
+  cart.forEach((product) => {
+    const finalDate = document.querySelector(`.js-finaldate-${product.id}`);
+    let deliveryOptionId;
+    deliveryOptionId = product.deliveryOptionId;
+    let daysToAdd;
+    if (deliveryOptionId == 1) {
+      daysToAdd = 7;
+    } else if (deliveryOptionId == 2) {
+      daysToAdd = 3;
+    } else {
+      daysToAdd = 1;
+    }
+    const newDate = now.add(daysToAdd, "day");
+    const deliveryDate = newDate.format("dddd, MMMM D");
+    finalDate.textContent = `Delivery date: ${deliveryDate}`;
   });
 });
