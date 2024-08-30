@@ -76,6 +76,5 @@ export function updateDeliveryOption(productId, newDeliveryOptionId) {
     }
   });
   matchingProduct.deliveryOptionId = newDeliveryOptionId;
-
   saveToStorage();
 }
