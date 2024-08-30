@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         console.log("closest .js-item-container not FOUND !");
       }
-      updateDeliveryOption(productId,newDeliveryOptionId);
+      updateDeliveryOption(productId, newDeliveryOptionId);
     }
   });
 });
@@ -132,23 +132,25 @@ deleteBtn.forEach((btn) => {
     const itemId = btn.dataset.itemId;
     removeProductFromOrderSummary(itemId);
     removeFromCart(itemId);
+    renderPaymentSummary();
   });
 });
 
-document.querySelectorAll('.js-delivery-option').forEach((deliveryOption)=>{
-  deliveryOption.addEventListener('click',(event)=>{
-    const selectedOption = event.target.closest('.js-delivery-option');
+document.querySelectorAll(".js-delivery-option").forEach((deliveryOption) => {
+  deliveryOption.addEventListener("click", (event) => {
+    const selectedOption = event.target.closest(".js-delivery-option");
     const finalDate = selectedOption.dataset.finalDate;
-    const input = deliveryOption.querySelector('.js-delivery-option-input');
+    const input = deliveryOption.querySelector(".js-delivery-option-input");
     const newDeliveryOptionId = input.value;
-    if(input){
+    if (input) {
       input.checked = true;
     }
-    const cartItemContainer = selectedOption.closest('.js-item-container');
+    const cartItemContainer = selectedOption.closest(".js-item-container");
     const productId = cartItemContainer.id;
-    const deliveryDate = cartItemContainer.querySelector('.js-delivery-date');
+    const deliveryDate = cartItemContainer.querySelector(".js-delivery-date");
     deliveryDate.textContent = `Delivery date: ${finalDate}`;
-    updateDeliveryOption(productId,newDeliveryOptionId)
+    updateDeliveryOption(productId, newDeliveryOptionId);
+    renderPaymentSummary();
   });
 });
 
@@ -171,3 +173,73 @@ document.addEventListener("DOMContentLoaded", () => {
     finalDate.textContent = `Delivery date: ${deliveryDate}`;
   });
 });
+
+// PayMent Summary
+function renderPaymentSummary() {
+  let totalPrice = 0;
+  let totalShippingCharges = 0;
+  let totalItems = 0;
+  cart.forEach((cartItem) => {
+    let matchingProduct;
+    products.forEach((product) => {
+      if (cartItem.id === product.id) {
+        matchingProduct = product;
+      }
+    });
+    totalPrice += cartItem.quantity * matchingProduct.priceCents;
+
+    let matchingOption;
+    deliveryOptions.forEach((option) => {
+      if (cartItem.deliveryOptionId === option.id) {
+        matchingOption = option;
+      }
+    });
+    totalShippingCharges += matchingOption.priceCents;
+    totalItems += cartItem.quantity;
+  });
+  const totalPriceBeforeTax = totalPrice + totalShippingCharges;
+  const estimatedTax = totalPriceBeforeTax * 0.1;
+  const printedTax = estimatedTax.toFixed(2);
+  const orderTotal = totalPriceBeforeTax + estimatedTax;
+  const printedOrderTotal = orderTotal.toFixed(2);
+  
+  
+  
+  const paymentSummaryHTML = `
+      <div class="payment-summary-title">
+        Order Summary
+      </div>
+
+      <div class="payment-summary-row">
+        <div>Items (${totalItems}):</div>
+        <div class="payment-summary-money">${totalPrice}</div>
+      </div>
+
+      <div class="payment-summary-row">
+        <div>Shipping &amp; handling:</div>
+        <div class="payment-summary-money">${totalShippingCharges}</div>
+      </div>
+
+      <div class="payment-summary-row subtotal-row">
+        <div>Total before tax:</div>
+        <div class="payment-summary-money">${totalPriceBeforeTax}</div>
+      </div>
+
+      <div class="payment-summary-row">
+        <div>Estimated tax (10%):</div>
+        <div class="payment-summary-money">${printedTax}</div>
+      </div>
+
+      <div class="payment-summary-row total-row">
+        <div>Order total:</div>
+        <div class="payment-summary-money">₹${printedOrderTotal}</div>
+      </div>
+
+      <button class="place-order-button button-primary">
+        Place your order
+      </button>
+  `;
+  document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
+}
+
+renderPaymentSummary();
