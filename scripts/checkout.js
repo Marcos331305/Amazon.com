@@ -104,11 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/*
-Setting up the finalDeliveryDate when the page is loaded or reloaded
----> As we know we are going to setup the first delivery option selected by default for each product of cart
----> So according to this we are going to set the finalDeliveryDate when the page is loaded or reloaded to the date which is present in first delivery option(Free-DeliveryOption)
-*/
 document.addEventListener("DOMContentLoaded", () => {
   const now = dayjs();
   const newDate = now.add(7, "day");
@@ -138,19 +133,6 @@ deleteBtn.forEach((btn) => {
   });
 });
 
-// Using day.JS library to showing delivery dates on checkout-page
-/*
-Best Practice in Programming --->
-=> When we need something complicated,
-1. Try to find an external Library first.
-2. Before writing the code ourselves. 
-*/
-// const now = dayjs();
-// const todaysDate = now.format('YYYY-MM-DD');
-// console.log('todaysDate : ',todaysDate);
-// const newDate = now.add(7,'day');
-// const deliveryDate = newDate.format('dddd, MMMM D');
-// console.log('deliverDate(after 7 days) : ',deliveryDate);
 
 document.querySelectorAll(".js-delivery-option").forEach((element) => {
   element.addEventListener("click", (event) => {
