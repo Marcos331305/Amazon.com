@@ -276,9 +276,9 @@ document.addEventListener("DOMContentLoaded", () => {
       quantityInput.classList.add("visible");
       saveBtn.classList.add("visible");
       // hide the updateBtn
-      updateBtn.classList.toggle("no-visible");
+      updateBtn.classList.add("no-visible");
 
-      saveBtn.addEventListener("click", function saveHandler() {
+      function saveHandler() {
         const newQuantity = quantityInput.value;
         const numericValue = Number(newQuantity);
         // hide the inputBtn and saveBtn
@@ -286,8 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.classList.remove("visible");
         // again show the updateBtn
         updateBtn.classList.remove("no-visible");
-        // remove eventListner from the saveBtn
-        saveBtn.removeEventListener("click", saveHandler);
+
         if (
           // condition for strictly inputed QUANTITY
           newQuantity !== "" &&
@@ -311,7 +310,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         // clear the quantity-input
         quantityInput.value = "";
-      });
+        // firstly remove all previous eventListners
+        saveBtn.removeEventListener("click", saveHandler);
+        quantityInput.removeEventListener("keydown", enterHandler);
+      }
+      function enterHandler(event) {
+        if (event.key === "Enter") {
+          saveHandler();
+        }
+      }
+      // firstly remove all previous eventListners
+      saveBtn.removeEventListener("click", saveHandler);
+      quantityInput.removeEventListener('keydown', enterHandler);
+
+      saveBtn.addEventListener('click',saveHandler);
+      quantityInput.addEventListener('keydown',enterHandler);
     });
   });
 });

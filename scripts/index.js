@@ -89,13 +89,18 @@ function updateCartQuantity() {
   // Calculate the total cart quantity
   const realCart = JSON.parse(localStorage.getItem("cart"));
   let totalQuantity = 0;
-  realCart.forEach((item)=>{
-    totalQuantity += item.quantity;
+  realCart.forEach((item) => {
+    totalQuantity += Number(item.quantity);
   });
-  localStorage.setItem('totalQuantity',JSON.stringify(totalQuantity));
-  // Upadate the totalQuantity in the cart-logo while presistanting it
-  document.querySelector(".js-cart-quantity-smallDevices").innerHTML = JSON.parse(localStorage.getItem('totalQuantity'));
-  document.querySelector(".js-cart-quantity").innerHTML = JSON.parse(localStorage.getItem('totalQuantity'));
+  localStorage.setItem("totalQuantity", JSON.stringify(totalQuantity));
+  // Upadate the totalQuantity in the cart-logo while presistanting it but not show when totalQuantity is 0
+  if (totalQuantity != 0) {
+    document.querySelector(".js-cart-quantity-smallDevices").innerHTML =
+      JSON.parse(localStorage.getItem("totalQuantity"));
+    document.querySelector(".js-cart-quantity").innerHTML = JSON.parse(
+      localStorage.getItem("totalQuantity")
+    );
+  }
 }
 
 // Make it interactive by adding the functionality to addCart btn
