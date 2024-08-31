@@ -1,6 +1,7 @@
 import { cart, removeFromCart, updateDeliveryOption } from "../data/cart.js"; // Named Exports
 import { deliveryOptions } from "../data/deliveryOptions.js";
 import { products } from "../data/products.js";
+import { updatedQuantity } from "../data/cart.js";
 // Importing ESM-version of day.JS Library using JS-Modules
 import dayjs from "https://cdn.jsdelivr.net/npm/dayjs@2.0.0-alpha.2/dist/index.mjs"; // Default-Export Syntax
 
@@ -26,11 +27,13 @@ cart.forEach((cartItem) => {
             <div class="product-price">₹${matchingItem.priceCents}</div>
             <div class="product-quantity">
                 <span>
-                    Quantity: <span class="quantity-label">${
+                    Quantity: <span class="quantity-label js-quantity-label">${
                       cartItem.quantity
                     }</span>
                 </span>
-                <span class="update-quantity-link link-primary js-update-link" data-product-id="${cartItem.id}">Update</span>
+                <span class="update-quantity-link link-primary js-update-link" data-product-id="${
+                  cartItem.id
+                }">Update</span>
                 <input class="quantity-input js-quantity-input">
                 <span class="save-quantity-link link-primary js-save-quantitylink">Save</span>
                 <span data-item-id="${
@@ -206,9 +209,7 @@ function renderPaymentSummary() {
   const printedTax = estimatedTax.toFixed(2);
   const orderTotal = totalPriceBeforeTax + estimatedTax;
   const printedOrderTotal = orderTotal.toFixed(2);
-  
-  
-  
+
   const paymentSummaryHTML = `
       <div class="payment-summary-title">
         Order Summary
@@ -243,28 +244,74 @@ function renderPaymentSummary() {
         Place your order
       </button>
   `;
-  document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
+  document.querySelector(".js-payment-summary").innerHTML = paymentSummaryHTML;
 }
 
 renderPaymentSummary();
 
 // checkout items header
-function checkoutQuantity(){
+function checkoutQuantity() {
   let totalItems = 0;
-  cart.forEach((cartItem)=>{
-    totalItems += cartItem.quantity;
+  cart.forEach((cartItem) => {
+    totalItems += Number(cartItem.quantity);
   });
-  document.querySelector('.js-return-tohome-link').textContent = `${totalItems} items`;
+  document.querySelector(
+    ".js-return-tohome-link"
+  ).textContent = `${totalItems} items`;
 }
 
 // Update Btn's
-document.querySelectorAll('.js-update-link').forEach((updateBtn)=>{
-  updateBtn.addEventListener('click',(event)=>{
-    const productId = event.target.dataset.productId;
-    const quantityInput = document.querySelector('.js-quantity-input');
-    quantityInput.classList.add('visible');
-    const saveBtn = document.querySelector('.js-save-quantitylink');
-    saveBtn.classList.add('visible');
-    updateBtn.classList.add('no-visible');
+document.addEventListener("DOMContentLoaded", () => {
+  const updateBtns = document.querySelectorAll(".js-update-link");
+  updateBtns.forEach((updateBtn) => {
+    updateBtn.addEventListener("click", (event) => {
+      const productId = event.target.dataset.productId;
+      const cartItemContainer = updateBtn.closest(".cart-item-container");
+      const quantityInput =
+        cartItemContainer.querySelector(".js-quantity-input");
+      const saveBtn = cartItemContainer.querySelector(".js-save-quantitylink");
+      const quantityLabel =
+        cartItemContainer.querySelector(".js-quantity-label");
+      // show the inputBox and saveBtn
+      quantityInput.classList.add("visible");
+      saveBtn.classList.add("visible");
+      // hide the updateBtn
+      updateBtn.classList.toggle("no-visible");
+
+      saveBtn.addEventListener("click", function saveHandler() {
+        const newQuantity = quantityInput.value;
+        const numericValue = Number(newQuantity);
+        // hide the inputBtn and saveBtn
+        quantityInput.classList.remove("visible");
+        saveBtn.classList.remove("visible");
+        // again show the updateBtn
+        updateBtn.classList.remove("no-visible");
+        // remove eventListner from the saveBtn
+        saveBtn.removeEventListener("click", saveHandler);
+        if (
+          // condition for strictly inputed QUANTITY
+          newQuantity !== "" &&
+          !isNaN(numericValue) &&
+          Number.isInteger(numericValue) &&
+          numericValue > 0 &&
+          newQuantity === String(numericValue)
+        ) {
+          // adding newQuantity to the cart
+          updatedQuantity(productId, newQuantity);
+          // re-generateHTML for chekout header Quantity
+          checkoutQuantity();
+          // re-generateHTML for the payment-summary
+          renderPaymentSummary();
+          // update the quantityLabel also
+          quantityLabel.textContent = numericValue;
+        } else {
+          alert(
+            "! Please enter a valid QUANTITY :- It must be a positive whole number without EXTRA-SPACES !"
+          );
+        }
+        // clear the quantity-input
+        quantityInput.value = "";
+      });
+    });
   });
 });
