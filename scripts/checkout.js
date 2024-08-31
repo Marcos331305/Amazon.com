@@ -30,7 +30,9 @@ cart.forEach((cartItem) => {
                       cartItem.quantity
                     }</span>
                 </span>
-                <span class="update-quantity-link link-primary">Update</span>
+                <span class="update-quantity-link link-primary js-update-link" data-product-id="${cartItem.id}">Update</span>
+                <input class="quantity-input js-quantity-input">
+                <span class="save-quantity-link link-primary js-save-quantitylink">Save</span>
                 <span data-item-id="${
                   cartItem.id
                 }" class="delete-quantity-link link-primary js-delete-link">Delete</span>
@@ -133,6 +135,7 @@ deleteBtn.forEach((btn) => {
     removeProductFromOrderSummary(itemId);
     removeFromCart(itemId);
     renderPaymentSummary();
+    checkoutQuantity();
   });
 });
 
@@ -172,6 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const deliveryDate = newDate.format("dddd, MMMM D");
     finalDate.textContent = `Delivery date: ${deliveryDate}`;
   });
+  checkoutQuantity();
 });
 
 // PayMent Summary
@@ -243,3 +247,24 @@ function renderPaymentSummary() {
 }
 
 renderPaymentSummary();
+
+// checkout items header
+function checkoutQuantity(){
+  let totalItems = 0;
+  cart.forEach((cartItem)=>{
+    totalItems += cartItem.quantity;
+  });
+  document.querySelector('.js-return-tohome-link').textContent = `${totalItems} items`;
+}
+
+// Update Btn's
+document.querySelectorAll('.js-update-link').forEach((updateBtn)=>{
+  updateBtn.addEventListener('click',(event)=>{
+    const productId = event.target.dataset.productId;
+    const quantityInput = document.querySelector('.js-quantity-input');
+    quantityInput.classList.add('visible');
+    const saveBtn = document.querySelector('.js-save-quantitylink');
+    saveBtn.classList.add('visible');
+    updateBtn.classList.add('no-visible');
+  });
+});
